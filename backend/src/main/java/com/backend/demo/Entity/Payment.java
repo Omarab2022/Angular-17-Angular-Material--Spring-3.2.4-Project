@@ -30,7 +30,7 @@ public class Payment {
 
 	private PaymentStatus status = PaymentStatus.CREATED;
 
-	private String File;
+	private String file;
 
 	@ManyToOne
 	private Student student;
