@@ -3,6 +3,7 @@ package com.backend.demo.Controllers;
 
 import com.backend.demo.Entity.Payment;
 import com.backend.demo.Entity.Student;
+import com.backend.demo.Enums.PaymentStatus;
 import com.backend.demo.Enums.PaymentType;
 import com.backend.demo.Repository.PaymentRepo;
 import com.backend.demo.Repository.StudentRepo;
@@ -69,22 +70,24 @@ public class StudentController {
 		if (!Files.exists(path)){
             Files.createDirectories(path);
 		}
-		String paymentId = UUID.randomUUID().toString();
-		Path filePath = Paths.get(System.getProperty("user.home"),"students-app-files","payments",paymentId+".pdf");
+		String fileId = UUID.randomUUID().toString();
+
+		Path filePath = Paths.get(System.getProperty("user.home"),"students-app-files","payments",fileId+".pdf");
 
 		Files.copy(file.getInputStream(),filePath);
 
-		
 		Student student = studentRepo.findByCode(studentcode);
 
 		Payment payment = Payment.builder()
-				.date(date)
 				.amount(amount)
 				.type(type)
-				.file(file.getOriginalFilename())
+				.status(PaymentStatus.CREATED)
+				.file(filePath.toUri().toString())
 				.student(student)
 				.build();
 
-		return payment;
+		Payment savedpayment = paymentRepo.save(payment);
+
+		return savedpayment;
 	}
  }
