@@ -2,6 +2,7 @@ package com.backend.demo;
 
 import com.backend.demo.Entity.Payment;
 import com.backend.demo.Entity.Student;
+import com.backend.demo.Enums.PaymentStatus;
 import com.backend.demo.Enums.PaymentType;
 import com.backend.demo.Repository.PaymentRepo;
 import com.backend.demo.Repository.StudentRepo;
@@ -67,15 +68,12 @@ public class DemoApplication {
 							.type(types[index])
 							.file(UUID.randomUUID().toString())
 							.student(st)
+							.status(PaymentStatus.CREATED)
 							.build();
 
 					paymentRepo.save(payment);
 				}
 			});
-
-
-
-
 		};
 	}
 }

@@ -7,12 +7,14 @@ import com.backend.demo.Enums.PaymentStatus;
 import com.backend.demo.Enums.PaymentType;
 import com.backend.demo.Repository.PaymentRepo;
 import com.backend.demo.Repository.StudentRepo;
+import com.backend.demo.Services.PaymentService;
 import lombok.Getter;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,6 +28,8 @@ public class StudentController {
 	private PaymentRepo paymentRepo;
 
 	private StudentRepo studentRepo;
+
+	private PaymentService paymentService;
 
 	public StudentController(PaymentRepo paymentRepo , StudentRepo studentRepo) {
 		this.paymentRepo = paymentRepo;
@@ -64,30 +68,22 @@ public class StudentController {
 	                           PaymentType type ,
 	                           String studentcode) throws IOException {
 
-
-		Path path = Paths.get(System.getProperty("user.home"),"students-app-files","payments");
-
-		if (!Files.exists(path)){
-            Files.createDirectories(path);
-		}
-		String fileId = UUID.randomUUID().toString();
-
-		Path filePath = Paths.get(System.getProperty("user.home"),"students-app-files","payments",fileId+".pdf");
-
-		Files.copy(file.getInputStream(),filePath);
-
-		Student student = studentRepo.findByCode(studentcode);
-
-		Payment payment = Payment.builder()
-				.amount(amount)
-				.type(type)
-				.status(PaymentStatus.CREATED)
-				.file(filePath.toUri().toString())
-				.student(student)
-				.build();
-
-		Payment savedpayment = paymentRepo.save(payment);
-
-		return savedpayment;
+		return paymentService.savePayment(file,date,amount,type,studentcode);
 	}
+
+	@GetMapping(value = "/paymentFile/{paymentid}", produces = MediaType.APPLICATION_PDF_VALUE)
+	public byte[] getPaymentFile(@PathVariable Long paymentid) throws IOException {
+		Payment payment = paymentRepo.findById(paymentid).get();
+		String filePath = payment.getFile();
+		return Files.readAllBytes(Path.of(URI.create(filePath)));
+	}
+
+	@PutMapping("/payments/updatestatus/{paymentid}")
+	public Payment updatepaymentstatue(@RequestParam PaymentStatus status , @PathVariable Long paymentid){
+
+        Payment payment = paymentRepo.findById(paymentid).get();
+		payment.setStatus(status);
+		return paymentRepo.save(payment);
+	}
+
  }
