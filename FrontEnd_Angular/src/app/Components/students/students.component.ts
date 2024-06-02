@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,14 +14,14 @@ import { Router } from '@angular/router';
 export class StudentsComponent implements OnInit ,AfterViewInit{
 
 
-  constructor(private router: Router) { }
+  constructor(private router: Router , private http :HttpClient) { }
 
 
   public students : any;
 
   public datasource :any ;
 
-  public displayedColumns = ["id", "name", "lastname", "age" , "Payment"];
+  public displayedColumns = ["id", "name", "lastname","code","email" , "photo"  , "Payment"];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -31,17 +32,22 @@ export class StudentsComponent implements OnInit ,AfterViewInit{
 
     this.students = [];
 
-    for (let i = 1; i < 20; i++) {
-      
-      this.students.push({
+    this.http.get('http://localhost:8080/students').subscribe( {
+      next : value => {
+        this.students = value;
 
-        id : i,
-        name : "Name" + i.toString(20),
-        lastname: "Lastname" + i.toString(20),
-        age : Math.floor(Math.random() * 100),
+        this.datasource = new MatTableDataSource(this.students);
+
+        this.datasource.paginator = this.paginator;
+
+        this.datasource.sort = this.sort;
+
+
+      },
+      error: (error) => {
+        console.log(error);
       }
-      );
-    }
+      });
 
     this.datasource = new MatTableDataSource(this.students);
   }

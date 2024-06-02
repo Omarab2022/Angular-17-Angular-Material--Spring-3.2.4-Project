@@ -33,6 +33,7 @@ import { FormGroup, FormGroupName, FormsModule, ReactiveFormsModule } from '@ang
 import { AuthGuard } from './Guards/auth.guard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthorizationGuard } from './Guards/authorization.guard';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -74,7 +75,8 @@ import { AuthorizationGuard } from './Guards/authorization.guard';
     MatCardActions,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule
     
    
   
