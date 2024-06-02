@@ -3,6 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { StudentsService } from '../../Services/students.service';
 
 @Component({
   selector: 'app-payment',
@@ -24,14 +25,14 @@ export class PaymentComponent implements OnInit{
 
 
 
-  constructor(private http : HttpClient){
+  constructor( private studentService : StudentsService){
 
   }
  
 
   ngOnInit(): void {
 
-    this.http.get('http://localhost:8080/payments').subscribe( {
+    this.studentService.getAllPayments().subscribe( {
 
       next: value => {
 
