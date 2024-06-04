@@ -1,6 +1,7 @@
 package com.backend.demo.Controllers;
 
 
+import com.backend.demo.Dto.PaymentDto;
 import com.backend.demo.Entity.Payment;
 import com.backend.demo.Entity.Student;
 import com.backend.demo.Enums.PaymentStatus;
@@ -9,6 +10,7 @@ import com.backend.demo.Repository.PaymentRepo;
 import com.backend.demo.Repository.StudentRepo;
 import com.backend.demo.Services.PaymentService;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +32,7 @@ public class StudentController {
 
 	private StudentRepo studentRepo;
 
+	@Autowired
 	private PaymentService paymentService;
 
 	public StudentController(PaymentRepo paymentRepo , StudentRepo studentRepo) {
@@ -63,13 +66,10 @@ public class StudentController {
 	}
 
 	@PostMapping(value = "/payments",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public Payment savepayment(@RequestParam MultipartFile file ,
-	                           LocalDate date ,
-	                           double amount ,
-	                           PaymentType type ,
-	                           String studentcode) throws IOException {
+	public Payment savepayment(@RequestParam("file") MultipartFile file ,
+	                           PaymentDto newPaymentdto ) throws IOException {
 
-		return paymentService.savePayment(file,date,amount,type,studentcode);
+		return paymentService.savePayment(file,newPaymentdto);
 	}
 
 	@GetMapping(value = "/paymentFile/{paymentid}", produces = MediaType.APPLICATION_PDF_VALUE)

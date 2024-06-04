@@ -1,6 +1,7 @@
 package com.backend.demo.Services;
 
 
+import com.backend.demo.Dto.PaymentDto;
 import com.backend.demo.Entity.Payment;
 import com.backend.demo.Entity.Student;
 import com.backend.demo.Enums.PaymentStatus;
@@ -8,6 +9,7 @@ import com.backend.demo.Enums.PaymentType;
 import com.backend.demo.Repository.PaymentRepo;
 import com.backend.demo.Repository.StudentRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,16 +29,14 @@ public class PaymentService {
 	private StudentRepo studentRepo;
 
 
+	@Autowired
 	public PaymentService(PaymentRepo paymentRepo , StudentRepo studentRepo) {
 		this.paymentRepo = paymentRepo;
 		this.studentRepo = studentRepo;
 	}
 
 	public Payment savePayment(MultipartFile file ,
-	                           LocalDate date ,
-	                           double amount ,
-	                           PaymentType type ,
-	                           String studentcode) throws IOException {
+	                           PaymentDto newPaymentdto) throws IOException {
 
 		Path path = Paths.get(System.getProperty("user.home"),"students-app-files","payments");
 
@@ -49,11 +49,12 @@ public class PaymentService {
 
 		Files.copy(file.getInputStream(),filePath);
 
-		Student student = studentRepo.findByCode(studentcode);
+		Student student = studentRepo.findByCode(newPaymentdto.getStudentCode());
 
 		Payment payment = Payment.builder()
-				.amount(amount)
-				.type(type)
+				.amount(newPaymentdto.getAmount())
+				.type(newPaymentdto.getType())
+				.date(newPaymentdto.getDate())
 				.status(PaymentStatus.CREATED)
 				.file(filePath.toUri().toString())
 				.student(student)

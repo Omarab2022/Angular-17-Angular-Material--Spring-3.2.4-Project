@@ -27,13 +27,19 @@ import { LoadstudentsComponent } from './Components/loadstudents/loadstudents.co
 import { MatInput } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatOption, MatSelect, MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormGroup, FormGroupName, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './Guards/auth.guard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthorizationGuard } from './Guards/authorization.guard';
 import { HttpClientModule } from '@angular/common/http';
+import { StudentDetailsComponent } from './Components/student-details/student-details.component';
+import { NewPaymentComponent } from './Components/new-payment/new-payment.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
 
 
 
@@ -48,7 +54,9 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     DashboardComponent,
     LoadstudentsComponent,
-    LoadPaymentComponent
+    LoadPaymentComponent,
+    StudentDetailsComponent,
+    NewPaymentComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +84,14 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatSelectModule,
+    PdfViewerModule
+   
+   
     
    
   

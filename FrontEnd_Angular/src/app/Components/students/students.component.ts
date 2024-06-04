@@ -4,6 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { StudentsService } from '../../Services/students.service';
+import { Student } from '../../../Models/students.model';
 
 
 @Component({
@@ -14,10 +16,10 @@ import { Router } from '@angular/router';
 export class StudentsComponent implements OnInit ,AfterViewInit{
 
 
-  constructor(private router: Router , private http :HttpClient) { }
+  constructor(private router: Router ,private studentService : StudentsService) { }
 
 
-  public students : any;
+  public students! : Array<Student>;
 
   public datasource :any ;
 
@@ -30,9 +32,7 @@ export class StudentsComponent implements OnInit ,AfterViewInit{
   ngOnInit(): void {
     
 
-    this.students = [];
-
-    this.http.get('http://localhost:8080/students').subscribe( {
+    this.studentService.getAllStudents().subscribe( {
       next : value => {
         this.students = value;
 
@@ -69,8 +69,8 @@ export class StudentsComponent implements OnInit ,AfterViewInit{
     }
 
 
-    getpayments(student: any) {
-      this.router.navigateByUrl("/payment")
+    getpayments(student: Student) {
+      this.router.navigateByUrl("/admin/student-details/"+student.code)
       }
   }
 
